@@ -2,7 +2,7 @@
 
 > ⚠️ **Note:** This project is currently in active development. APIs and features may change.
 
-Lib UI is an innovative fullstack component library for Next.js that adds both UI components and their corresponding backend logic directly into your project. Unlike traditional component libraries, Lib UI uses a CLI to add production-ready, fullstack features directly into your codebase - giving you complete control over both the UI and logic.
+Lib UI is an innovative fullstack component library for Next.js that adds both UI components and their corresponding backend logic directly into your project. Unlike traditional component libraries, Lib UI uses a CLI to add production-ready, fullstack features directly into your codebase - giving you complete control over both the UI and logic. Our goal with this project is to give developers control over what they build and speed up development process by not worrying about the setup process but get straight to building.
 
 ## How It Works
 
