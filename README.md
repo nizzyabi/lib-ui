@@ -109,17 +109,17 @@ Each feature can be added individually through our CLI:
 
 ## Development Roadmap
 
-1. **Q1 2024**
+1. **Q1 2025**
    - CLI development
    - Auth component generation
    - Basic documentation
    
-2. **Q2 2024**
+2. **Q2 2025**
    - Payment components
    - Email integration
    - Interactive component customization
    
-3. **Q3 2024**
+3. **Q3 2025**
    - Additional modules
    - Beta release
 
