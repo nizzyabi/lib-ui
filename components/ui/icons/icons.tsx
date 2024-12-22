@@ -10,7 +10,7 @@ import {
   File,
   FileText,
   HelpCircle,
-  Image,
+  Image as LucideImage,
   Laptop,
   Loader2,
   Moon,
@@ -23,12 +23,19 @@ import {
   User,
   X,
 } from "lucide-react";
-
+import Image from "next/image";
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
 export const Icons = {
   logo: ({ className, ...props }: { className: string }) => (
-    <img src="/icon.png" alt="Magic UI" className={className} {...props} />
+    <Image
+      height={24}
+      width={24}
+      src="/icon.png"
+      alt="Lib UI"
+      className={className}
+      {...props}
+    />
   ),
   close: X,
   spinner: Loader2,
@@ -63,7 +70,7 @@ export const Icons = {
   trash: Trash,
   post: FileText,
   page: File,
-  media: Image,
+  media: LucideImage,
   settings: Settings,
   billing: CreditCard,
   ellipsis: MoreVertical,
