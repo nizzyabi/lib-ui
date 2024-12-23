@@ -11,14 +11,6 @@ export const docsConfig: DocsConfig = {
       title: "Components",
       href: "/components",
     },
-    {
-      title: "Showcase",
-      href: "/showcase",
-    },
-    {
-      title: "About us",
-      href: "https://github.com/nizzyabi",
-    },
   ],
   sidebarNav: [
     {
@@ -75,6 +67,11 @@ export const docsConfig: DocsConfig = {
           href: "/docs/cli",
           items: [],
         },
+        {
+          title: "Demo",
+          href: "/docs/demo",
+          items: [],
+        },
       ],
     },
     {
@@ -83,6 +80,21 @@ export const docsConfig: DocsConfig = {
         {
           title: "Auth",
           href: `/docs/components/auth`,
+          items: [],
+        },
+        {
+          title: "Payments",
+          href: `/docs/components/payments`,
+          items: [],
+        },
+        {
+          title: "Landing Page",
+          href: `/docs/components/landing-page`,
+          items: [],
+        },
+        {
+          title: "Dashboard",
+          href: `/docs/components/dashboard`,
           items: [],
         },
       ],

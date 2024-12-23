@@ -48,46 +48,50 @@ export async function SiteHeader() {
         <MainNav />
         <MobileNav />
         <div className="flex items-center gap-3 text-sm">
-        <div className="flex items-center gap-8">
-          <Link href="/components" className="hidden md:flex">Components</Link>
-          <Link
+          <div className="flex items-center gap-8">
+            <Link href="/components" className="hidden md:flex">
+              Components
+            </Link>
+            <Link
+              className={cn(
+                buttonVariants({
+                  variant: "outline",
+                }),
+                "hidden md:inline-flex h-8 bg-black dark:bg-white group hover:opacity-100 hover:bg-black hover:dark:bg-white"
+              )}
+              target="_blank"
+              href={siteConfig.links.github}
+            >
+              <div className="flex items-center text-white dark:text-black">
+                <Icons.gitHub className="size-4" />
+                <span className="ml-1 lg:hidden">Star</span>
+                <span className="ml-1 hidden lg:inline">
+                  Stars on GitHub
+                </span>{" "}
+              </div>
+              <div className="ml-2 flex items-center gap-1 text-sm md:flex">
+                <StarIcon className="size-4 text-gray-500 transition-all duration-300 group-hover:text-yellow-300" />
+                <NumberTicker
+                  value={stars}
+                  className="font-display font-medium text-white dark:text-black"
+                />
+              </div>
+            </Link>
+            <CommandMenu />
+          </div>
+          <div
             className={cn(
               buttonVariants({
-                variant: "outline",
-              }),
-              "hidden md:inline-flex h-8 bg-black dark:bg-white group hover:opacity-100 hover:bg-black hover:dark:bg-white"
+                variant: "ghost",
+                size: "icon",
+              })
             )}
-            target="_blank"
-            href={siteConfig.links.github}
           >
-            <div className="flex items-center text-white dark:text-black">
-              <Icons.gitHub className="size-4" />
-              <span className="ml-1 lg:hidden">Star</span>
-              <span className="ml-1 hidden lg:inline">Stars on GitHub</span>{" "}
-            </div>
-            <div className="ml-2 flex items-center gap-1 text-sm md:flex">
-              <StarIcon className="size-4 text-gray-500 transition-all duration-300 group-hover:text-yellow-300" />
-              <NumberTicker
-                value={stars}
-                className="font-display font-medium text-white dark:text-black"
-              />
-            </div>
-          </Link>
-          <CommandMenu />
+            <Icons.gitHub className="size-4" />
+            <span className="sr-only">GitHub</span>
+          </div>
+          <ThemeToggle />
         </div>
-        <div
-          className={cn(
-            buttonVariants({
-              variant: "ghost",
-              size: "icon",
-            })
-          )}
-        >
-          <Icons.gitHub className="size-4" />
-          <span className="sr-only">GitHub</span>
-        </div>
-        <ThemeToggle />
-      </div>
       </div>
     </header>
   );
