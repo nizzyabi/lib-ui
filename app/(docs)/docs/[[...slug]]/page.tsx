@@ -18,14 +18,16 @@ import { Contribute } from "@/components/contribute";
 import { TableOfContents } from "@/components/toc";
 import { use } from 'react';
 
+type DocPageParams = {
+  slug: string[];
+};
+
 interface DocPageProps {
-  params: {
-    slug: string[];
-  };
+  params: DocPageParams;
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
-async function getDocFromParams({ params }: DocPageProps) {
+async function getDocFromParams({ params }: { params: DocPageParams }) {
   const slug = params.slug?.join("/") || "";
   const doc = allDocs.find((doc) => doc.slugAsParams === slug);
 
@@ -80,14 +82,14 @@ export async function generateStaticParams(): Promise<
   }));
 }
 
-export default function DocPage({ params }: DocPageProps) {
-  const doc = use(getDocFromParams({ params }));
+export default async function DocPage({ params }: DocPageProps) {
+  const doc = await getDocFromParams({ params });
 
   if (!doc || !doc.published) {
     notFound();
   }
 
-  const toc = use(getTableOfContents(doc.body.raw));
+  const toc = await getTableOfContents(doc.body.raw);
 
   return (
     <main
