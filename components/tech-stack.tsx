@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -8,7 +9,7 @@ import React from "react";
 
 type TechComponentType = {
   name: string;
-  icon: JSX.Element;
+  icon: any;
 };
 
 type TechComponents = Record<string, TechComponentType>;
