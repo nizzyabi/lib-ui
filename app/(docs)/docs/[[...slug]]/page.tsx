@@ -5,15 +5,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { siteConfig } from "@/config/site";
 import { getTableOfContents } from "@/lib/toc";
 import { absoluteUrl, cn } from "@/lib/utils";
-
 import "@/styles/mdx.css";
-
 import { ChevronRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import { allDocs } from "content-collections";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
 import { Contribute } from "@/components/contribute";
 import { TableOfContents } from "@/components/toc";
 
@@ -21,13 +18,9 @@ type DocPageParams = {
   slug: string[];
 };
 
-interface DocPageProps {
-  params: DocPageParams;
-  searchParams?: { [key: string]: string | string[] | undefined };
-}
-
-async function getDocFromParams({ params }: { params: DocPageParams }) {
-  const slug = params.slug?.join("/") || "";
+async function getDocFromParams({ params }: { params: Promise<DocPageParams> }) {
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug?.join("/") || "";
   const doc = allDocs.find((doc) => doc.slugAsParams === slug);
 
   if (!doc) {
@@ -39,7 +32,9 @@ async function getDocFromParams({ params }: { params: DocPageParams }) {
 
 export async function generateMetadata({
   params,
-}: DocPageProps): Promise<Metadata> {
+}: {
+  params: Promise<DocPageParams>;
+}): Promise<Metadata> {
   const doc = await getDocFromParams({ params });
 
   if (!doc) {
@@ -73,15 +68,17 @@ export async function generateMetadata({
   };
 }
 
-export async function generateStaticParams(): Promise<
-  DocPageProps["params"][]
-> {
+export async function generateStaticParams(): Promise<DocPageParams[]> {
   return allDocs.map((doc) => ({
     slug: doc.slugAsParams.split("/"),
   }));
 }
 
-export default async function DocPage({ params }: DocPageProps) {
+export default async function DocPage({ 
+  params 
+}: { 
+  params: Promise<DocPageParams> 
+}) {
   const doc = await getDocFromParams({ params });
 
   if (!doc || !doc.published) {
