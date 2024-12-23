@@ -16,14 +16,14 @@ import { notFound } from "next/navigation";
 
 import { Contribute } from "@/components/contribute";
 import { TableOfContents } from "@/components/toc";
+import { use } from 'react';
 
-// Update the interface to extend PageProps
-type DocPageProps = {
+interface DocPageProps {
   params: {
     slug: string[];
   };
   searchParams?: { [key: string]: string | string[] | undefined };
-};
+}
 
 async function getDocFromParams({ params }: DocPageProps) {
   const slug = params.slug?.join("/") || "";
@@ -80,14 +80,14 @@ export async function generateStaticParams(): Promise<
   }));
 }
 
-export default async function DocPage({ params }: DocPageProps) {
-  const doc = await getDocFromParams({ params });
+export default function DocPage({ params }: DocPageProps) {
+  const doc = use(getDocFromParams({ params }));
 
   if (!doc || !doc.published) {
     notFound();
   }
 
-  const toc = await getTableOfContents(doc.body.raw);
+  const toc = use(getTableOfContents(doc.body.raw));
 
   return (
     <main
