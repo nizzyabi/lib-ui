@@ -1,5 +1,5 @@
 export const siteConfig = {
-    name: "Lib",
+    name: "LibUI",
     url: "https://lib-ui.com",
     ogImage: "",
     description:

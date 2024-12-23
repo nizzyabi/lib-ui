@@ -1,15 +1,18 @@
-import Link from "next/link";
-import { ThemeToggle } from "./ui/theme/theme-toggle";
-import { buttonVariants } from "./ui/button";
-import { cn } from "@/lib/utils";
-import { Icons } from "./ui/icons/icons";
-import { CommandMenu } from "./command-menu";
-import { siteConfig } from "@/config/site";
 import { StarIcon } from "@heroicons/react/24/solid";
-import NumberTicker from "./ui/number-ticker";
+import Link from "next/link";
 
-export async function Navbar() {
-  let stars = 50;
+import { CommandMenu } from "@/components/command-menu";
+import { Icons } from "@/components/ui/icons/icons";
+import { MainNav } from "@/components/main-nav";
+import { MobileNav } from "@/components/mobile-nav";
+import { ThemeToggle } from "./ui/theme/theme-toggle";
+import { buttonVariants } from "@/components/ui/button";
+import { siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
+import NumberTicker from "@/components/ui/number-ticker";
+
+export async function SiteHeader() {
+  let stars = 300;
 
   try {
     const response = await fetch(
@@ -29,21 +32,24 @@ export async function Navbar() {
 
     if (response.ok) {
       const data = await response.json();
-      stars = data.stargazers_count || stars; // Update stars if API response is valid
+      stars = data.stargazers_count || stars;
     }
   } catch (error) {
     console.error("Error fetching GitHub stars:", error);
   }
+
   return (
-    <div className="flex justify-between items-center p-4">
-      <div>
-        <Link href="/" className="text-md font-bold">
-          LibUI
-        </Link>
-      </div>
-      <div className="flex items-center gap-3 text-sm">
+    <header
+      className={cn(
+        "supports-backdrop-blur:bg-background/90 sticky top-0 z-40 w-full bg-background/40 backdrop-blur-lg px-4"
+      )}
+    >
+      <div className="flex h-16 items-center justify-between">
+        <MainNav />
+        <MobileNav />
+        <div className="flex items-center gap-3 text-sm">
         <div className="flex items-center gap-8">
-          <Link href="/components">Components</Link>
+          <Link href="/components" className="hidden md:flex">Components</Link>
           <Link
             className={cn(
               buttonVariants({
@@ -82,6 +88,7 @@ export async function Navbar() {
         </div>
         <ThemeToggle />
       </div>
-    </div>
+      </div>
+    </header>
   );
 }

@@ -14,3 +14,7 @@ export function calculateLevelAndProgressBar(xp: number) {
 
   return { level, progressBar };
 }
+
+export function absoluteUrl(path: string) {
+  return `${process.env.NEXT_PUBLIC_APP_URL}${path}`;
+}
