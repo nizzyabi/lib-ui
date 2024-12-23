@@ -16,7 +16,6 @@ import { notFound } from "next/navigation";
 
 import { Contribute } from "@/components/contribute";
 import { TableOfContents } from "@/components/toc";
-import { use } from 'react';
 
 type DocPageParams = {
   slug: string[];
