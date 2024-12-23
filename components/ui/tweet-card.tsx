@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable @next/next/no-img-element */
 import { Suspense } from "react";
 import {
   enrichTweet,
@@ -211,6 +213,7 @@ export const TweetMedia = ({ tweet }: { tweet: EnrichedTweet }) => (
       // @ts-ignore
       tweet?.card?.binding_values?.thumbnail_image_large?.image_value.url && (
         <img
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           src={tweet.card.binding_values.thumbnail_image_large.image_value.url}
           className="h-64 rounded-xl border object-cover shadow-sm"
@@ -221,7 +224,6 @@ export const TweetMedia = ({ tweet }: { tweet: EnrichedTweet }) => (
 
 export const MagicTweet = ({
   tweet,
-  components,
   className,
   ...props
 }: {

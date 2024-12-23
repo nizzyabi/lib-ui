@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 interface ComponentWrapperProps {
   className?: string;
-  children: any;
+  children: React.ReactNode;
 }
 const ComponentWrapper = ({ className, children }: ComponentWrapperProps) => {
   return (

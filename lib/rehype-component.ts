@@ -156,17 +156,3 @@ export function rehypeComponent() {
 function getNodeAttributeByName(node: UnistNode, name: string) {
   return node.attributes?.find((attribute) => attribute.name === name);
 }
-
-function getComponentSourceFileContent(node: UnistNode) {
-  const src = getNodeAttributeByName(node, "src")?.value as string;
-
-  if (!src) {
-    return null;
-  }
-
-  // Read the source file.
-  const filePath = path.join(process.cwd(), src);
-  const source = fs.readFileSync(filePath, "utf8");
-
-  return source;
-}

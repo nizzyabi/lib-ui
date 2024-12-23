@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMDXComponent } from "@content-collections/mdx/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -225,8 +226,6 @@ const components: MDXComponents = {
     __withMeta__,
     __src__,
     __event__,
-    // __style__,
-    __name__,
     ...props
   }: React.HTMLAttributes<HTMLPreElement> & {
     // __style__?: Style["name"]
