@@ -17,11 +17,13 @@ import { notFound } from "next/navigation";
 import { Contribute } from "@/components/contribute";
 import { TableOfContents } from "@/components/toc";
 
-interface DocPageProps {
+// Update the interface to extend PageProps
+type DocPageProps = {
   params: {
     slug: string[];
   };
-}
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
 
 async function getDocFromParams({ params }: DocPageProps) {
   const slug = params.slug?.join("/") || "";
