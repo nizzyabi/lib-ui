@@ -79,7 +79,8 @@ export async function SiteHeader() {
             </Link>
             <CommandMenu />
           </div>
-          <div
+          <Link
+            href="https://github.com/nizzyabi/lib-ui"
             className={cn(
               buttonVariants({
                 variant: "ghost",
@@ -89,7 +90,7 @@ export async function SiteHeader() {
           >
             <Icons.gitHub className="size-4" />
             <span className="sr-only">GitHub</span>
-          </div>
+          </Link>
           <ThemeToggle />
         </div>
       </div>
