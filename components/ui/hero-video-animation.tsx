@@ -1,5 +1,4 @@
-import { BorderBeam } from "./border-beam";
-import { HeroVideoDialog } from "./hero-video-dialog";
+import { HeroVideoDialog } from "@/components/ui/hero-video-dialog";
 
 export function HeroVideoDialogDemoTopInBottomOut() {
   return (
