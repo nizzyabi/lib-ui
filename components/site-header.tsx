@@ -70,7 +70,7 @@ export async function SiteHeader() {
                 </span>{" "}
               </div>
               <div className="ml-2 flex items-center gap-1 text-sm md:flex">
-                <StarIcon className="size-4 text-gray-500 transition-all duration-300 group-hover:text-yellow-300" />
+                <StarIcon className="size-4 text-secondary/50 transition-all duration-300 group-hover:text-secondary" />
                 <NumberTicker
                   value={stars}
                   className="font-display font-medium text-white dark:text-black"

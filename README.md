@@ -81,7 +81,7 @@ npx lib-ui add payments
 
 Each feature can be added individually through our CLI:
 
-- 🔒 `npx lib-ui add auth` - Authentication with NextAuth.js
+- 🔒 `npx lib-ui add auth` - Authentication with Auth.js
 - 💳 `npx lib-ui add payments` - Stripe payments integration
 - 📝 `npx lib-ui add forms` - Form components with validation
 - 📊 `npx lib-ui add dashboard` - Admin dashboard components

@@ -58,6 +58,7 @@ export default {
         "shimmer-slide":
           "shimmer-slide var(--speed) ease-in-out infinite alternate",
         "spin-around": "spin-around calc(var(--speed) * 2) infinite linear",
+        "border-beam": "border-beam calc(var(--duration)*1s) infinite linear",
       },
       keyframes: {
         "spin-around": {
@@ -77,6 +78,11 @@ export default {
         "shimmer-slide": {
           to: {
             transform: "translate(calc(100cqw - 100%), 0)",
+          },
+        },
+        "border-beam": {
+          "100%": {
+            "offset-distance": "100%",
           },
         },
       },

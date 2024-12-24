@@ -3,10 +3,11 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import ShinyButton from "../ui/button-shiny";
+import Image from "next/image";
 
 export default function Hero() {
   return (
-    <div className="relative h-full overflow-hidden py-5 md:py-14">
+    <div className="relative h-full">
       <div className="mt-10 grid grid-cols-1 md:mt-20">
         <div className="flex justify-center items-center">
           <Link href="/docs">
@@ -61,6 +62,50 @@ export default function Hero() {
               <ChevronRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1 duration-300" />
             </Link>
           </div>
+        </div>
+      </div>
+
+      <div className="mt-6 flex flex-wrap justify-center items-center gap-x-12 gap-y-8 px-6">
+        <div className="relative w-20 h-7">
+          <Image
+            src="/logos/resend.svg"
+            alt="Resend"
+            fill
+            className="object-contain dark:invert"
+          />
+        </div>
+        <div className="relative w-20 h-7">
+          <Image
+            src="/logos/auth.svg"
+            alt="Auth.js"
+            fill
+            className="object-contain dark:invert"
+          />
+        </div>
+        <div className="relative w-24 h-7">
+          <Image
+            src="/logos/supabase.svg"
+            alt="Supabase"
+            fill
+            className="object-contain dark:invert"
+          />
+        </div>
+
+        <div className="relative w-28 h-7">
+          <Image
+            src="/logos/shadcn.svg"
+            alt="shadcn/ui"
+            fill
+            className="object-contain dark:invert"
+          />
+        </div>
+        <div className="relative w-14 h-7">
+          <Image
+            src="/logos/stripe.svg"
+            alt="Stripe"
+            fill
+            className="object-contain dark:invert"
+          />
         </div>
       </div>
     </div>

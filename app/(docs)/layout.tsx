@@ -7,7 +7,7 @@ export default async function DocsLayout({
 }: DocsLayoutProps) {
   return (
     <>
-      <main className="flex-1 border px-4">{children}</main>
+      <main className="flex-1 border-t">{children}</main>
     </>
   );
 }
