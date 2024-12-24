@@ -91,15 +91,15 @@ export default function Hero() {
           />
         </div>
 
-        <div className="relative w-28 h-7">
+        <div className="relative w-20 h-7">
           <Image
-            src="/logos/shadcn.svg"
-            alt="shadcn/ui"
+            src="/logos/nextjs.svg"
+            alt="Next.js"
             fill
             className="object-contain dark:invert"
           />
         </div>
-        <div className="relative w-14 h-7">
+        <div className="relative w-16 h-7">
           <Image
             src="/logos/stripe.svg"
             alt="Stripe"
