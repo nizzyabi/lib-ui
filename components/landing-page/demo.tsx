@@ -23,7 +23,7 @@ export default function Demo() {
         >
           Full-stack components are just one click away
         </h1>
-        <p className="max-w-xl mx-auto text-balance tracking-tight text-black dark:font-medium dark:text-white/70 text-center md:text-base my-3">
+        <p className="max-w-xl mx-auto text-balance tracking-tight text-black dark:font-medium dark:text-white/70 text-center md:text-base mt-3 mb-12">
           Want to see how LibUI works? Checkout out the demo video below!{" "}
         </p>
       </div>
