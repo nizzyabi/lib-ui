@@ -8,6 +8,7 @@ import ShinyButton from "../ui/button-shiny";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { CopyButton } from "../ui/copy-button";
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
@@ -86,18 +87,14 @@ export default function Hero() {
                 Browse components
               </Link>
               <Link
-                href="https://github.com/nizzyabi/lib-ui"
-                className={cn(
-                  buttonVariants({
-                    variant: "ghost",
-                    size: "lg",
-                    className: "hover:bg-transparent group",
-                  }),
-                  "gap-2"
-                )}
+                href=""
+                className={cn(buttonVariants({ variant: "outline" }), "h-11 hover:bg-transparent border-none")}
               >
-                Github
-                <ChevronRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1 duration-300" />
+                <CopyButton
+                  src="npx libui-next@latest"
+                  value="npx libui-next@latest"
+                />{" "}
+                npx libui-next
               </Link>
             </div>
           </motion.div>

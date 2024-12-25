@@ -4,6 +4,7 @@ import { Payment } from "@/components/ui/examples/payment-example";
 import { Auth } from "@/components/ui/examples/auth-example";
 import Image from "next/image";
 import { Chart } from "@/components/ui/examples/chart-example";
+import { ProductPayment } from "../ui/examples/product-example";
 
 export default function Components() {
   return (
@@ -34,13 +35,13 @@ export default function Components() {
         <div className="flex flex-col items-center">
           <div className="relative w-24 h-12 mb-4">
             <Image
-              src="/logos/stripe.svg"
-              alt="Stripe"
+              src="/logos/auth.svg"
+              alt="Auth.js"
               fill
               className="object-contain dark:invert"
             />
           </div>
-          <Payment />
+          <Auth />
         </div>
         <div className="flex flex-col items-center">
           <div className="relative w-28 h-12 mb-6">
@@ -56,13 +57,13 @@ export default function Components() {
         <div className="flex flex-col items-center">
           <div className="relative w-24 h-12 mb-4">
             <Image
-              src="/logos/auth.svg"
-              alt="Auth.js"
+              src="/logos/stripe.svg"
+              alt="Stripe"
               fill
               className="object-contain dark:invert"
             />
           </div>
-          <Auth />
+          <ProductPayment />
         </div>
       </div>
     </div>

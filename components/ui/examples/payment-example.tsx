@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Link from "next/link";
 import { useState } from "react";
 
 export function Payment() {
@@ -70,7 +71,9 @@ export function Payment() {
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full">Continue</Button>
+        <Link href="https://buy.stripe.com/test_7sIeYx3w76294h2dQQ">
+          <Button className="w-full">Continue</Button>
+        </Link>
       </CardFooter>
     </Card>
   );
