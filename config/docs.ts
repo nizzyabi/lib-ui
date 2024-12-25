@@ -80,21 +80,19 @@ export const docsConfig: DocsConfig = {
         {
           title: "Auth",
           href: `/docs/components/auth`,
+          label: "Coming soon",
           items: [],
         },
         {
           title: "Payments",
           href: `/docs/components/payments`,
+          label: "Coming soon",
           items: [],
         },
         {
-          title: "Landing Page",
-          href: `/docs/components/landing-page`,
-          items: [],
-        },
-        {
-          title: "Dashboard",
-          href: `/docs/components/dashboard`,
+          title: "Charts",
+          href: `/docs/components/charts`,
+          label: "Coming soon",
           items: [],
         },
       ],

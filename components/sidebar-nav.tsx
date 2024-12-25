@@ -80,13 +80,8 @@ export function DocsSidebarNavItems({
             )}
             <span className="relative z-10 shrink-0">{item.title}</span>
             {item.label && (
-              <span className="relative z-10 ml-2 rounded-md bg-[#FFBD7A] px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">
+              <span className="relative z-10 ml-2 rounded-lg bg-primary px-1.5 py-0.5 text-xs leading-none text-secondary no-underline group-hover:no-underline">
                 {item.label}
-              </span>
-            )}
-            {item.paid && (
-              <span className="relative z-10 ml-2 rounded-md bg-[#4ade80] px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">
-                Pro
               </span>
             )}
             {item.external && (

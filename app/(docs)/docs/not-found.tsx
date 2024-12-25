@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons/icons";
+import Link from "next/link";
 
 export default function NotFound() {
   const router = useRouter();
@@ -12,29 +12,24 @@ export default function NotFound() {
     <section>
       <div className="container mx-auto flex min-h-[calc(100vh-8rem)] items-center px-6 py-12">
         <div className="mx-auto flex max-w-sm flex-col items-center text-center">
-          <p className="rounded-full bg-blue-50 p-3 text-sm font-medium dark:bg-gray-800">
-            <Icons.warning className="size-6" />
+          <p className="rounded-full bg-primary p-3 text-sm font-medium">
+            <Icons.laptop className="size-6 text-secondary" />
           </p>
           <h1 className="mt-3 text-2xl font-semibold text-gray-800 dark:text-white md:text-3xl">
-            Page not found
+            This page is under construction
           </h1>
-          <p className="mt-4 text-gray-500 dark:text-gray-400">
-            The page you are looking for doesn&apos;t exist.
+          <p className="mt-4 text-muted-foreground">
+            We are working on it and it will be ready soon!
           </p>
 
-          <div className="group mt-6 flex w-full shrink-0 items-center gap-x-3 sm:w-auto">
+          <Link href="/docs" className="group mt-5 flex w-full shrink-0 items-center gap-x-3 sm:w-auto">
             <Button
               onClick={() => router.back()}
-              className={buttonVariants({ variant: "secondary" })}
+              variant="outline"
             >
-              <Icons.chevronLeft className="size-4 transition-transform group-hover:-translate-x-1" />
-              <span>Go back</span>
+              <span>Go home</span>
             </Button>
-
-            <Link href="/" className={buttonVariants({ variant: "default" })}>
-              Take me home
-            </Link>
-          </div>
+          </Link>
         </div>
       </div>
     </section>
