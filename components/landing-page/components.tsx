@@ -1,9 +1,7 @@
 import { cn } from "@/lib/utils";
 import ShinyButton from "@/components/ui/button-shiny";
 import { Auth } from "@/components/ui/examples/auth-example";
-import Image from "next/image";
 import { Chart } from "@/components/ui/examples/chart-example";
-import { ProductPayment } from "../ui/examples/product-example";
 import { Payment } from "../ui/examples/payment-example";
 
 export default function Components() {
