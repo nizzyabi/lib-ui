@@ -3,7 +3,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import {
   Card,
   CardContent,
@@ -18,46 +18,64 @@ import { Icons } from "@/components/ui/icons/icons";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 export function Auth() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const session = useSession();
+
+  const formSchema = z.object({
+    name: z.string().min(1, { message: "Name is required" }),
+    email: z.string().email(),
+    password: z.string().min(1, { message: "Password is required" }),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
 
   const handleGitHubSignIn = () => {
     signIn("github", { callbackUrl: "/" });
+    toast.success("Successfully signed in with GitHub!");
   };
 
   const handleGoogleSignIn = () => {
     signIn("google", { callbackUrl: "/" });
   };
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (session.status === "authenticated") {
+      toast.error("You are already logged in!");
+      return;
+    }
     try {
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        body: JSON.stringify({
-          email: formData.get("email"),
-          password: formData.get("password"),
-          name: formData.get("name"),
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      await axios.post("/api/auth/signup", {
+        email: values.email,
+        password: values.password,
+        name: values.name,
       });
 
-      if (!res.ok) {
-        throw new Error(await res.text());
-      }
-
       const result = await signIn("credentials", {
-        email,
-        password,
+        email: values.email,
+        password: values.password,
         redirect: false,
       });
 
@@ -65,82 +83,97 @@ export function Auth() {
         throw new Error(result.error);
       }
 
-      if (formRef.current) {
-        formRef.current.reset();
-      }
+      form.reset();
       toast.success("Successfully created account!");
       router.refresh();
-    } catch (error: any) {
-      setError(error.message);
-      toast.error(error.message);
+    } catch (error) {
+      const errorMessage = axios.isAxiosError(error)
+        ? error.response?.data || error.message
+        : "An error occurred";
+      setError(errorMessage);
+      toast.error(errorMessage);
     }
   };
-  return (
-    <form ref={formRef} onSubmit={onSubmit} className="w-full">
-      <Card className="w-full shadow-md shadow-primary/20">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl">Create an account</CardTitle>
-          <CardDescription>Enter your email to access.</CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-4">
-          <div className="flex gap-4">
-            <div className="grid gap-2 w-full">
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                type="text"
-                name="name"
-                placeholder="Tyler Durden"
-              />
-            </div>
 
-            <div className="grid gap-2 w-full">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
+  return (
+    <Card className="w-full shadow-md shadow-primary/20">
+      <CardHeader className="space-y-1 pb-2">
+        <CardTitle className="text-2xl">Create an account</CardTitle>
+        <CardDescription>Enter your email to access.</CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-3">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+            <div className="flex gap-4 mb-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Tyler Durden" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="email"
-                placeholder="tyler@gmail.com"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="tyler@gmail.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
+            <FormField
+              control={form.control}
               name="password"
-              placeholder="••••••••"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="•••••••" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 py-[4px] text-muted-foreground">
-                Or continue with
-              </span>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-6">
-            <Button onClick={handleGoogleSignIn} variant="outline">
-              <Icons.google className="mr-2 h-4 w-4" />
-              Google
+            <Button className="w-full mt-4" type="submit">
+              Create account
             </Button>
-            <Button variant="outline" onClick={handleGitHubSignIn}>
-              <Icons.gitHub className="mr-2 h-4 w-4" />
-              Github
-            </Button>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button className="w-full" type="submit">
-            Create account
+          </form>
+        </Form>
+      </CardContent>
+      <div className="relative mb-3">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full mx-6 border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 py-[4px] text-muted-foreground">
+            Or continue with
+          </span>
+        </div>
+      </div>
+      <CardFooter>
+        <div className="grid grid-cols-2 gap-6 w-full">
+          <Button onClick={handleGoogleSignIn} variant="outline">
+            <Icons.google className="mr-2 h-4 w-4" />
+            Google
           </Button>
-        </CardFooter>
-        {/* if logged in card should show persons name and saying hello */}
-      </Card>
-    </form>
+          <Button variant="outline" onClick={handleGitHubSignIn}>
+            <Icons.gitHub className="mr-2 h-4 w-4" />
+            Github
+          </Button>
+        </div>
+      </CardFooter>
+      {/* if logged in card should show persons name and saying hello */}
+    </Card>
   );
 }
