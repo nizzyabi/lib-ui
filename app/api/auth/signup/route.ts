@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+import * as z from "zod";
 
 export async function POST(req: Request) {
   try {
@@ -11,13 +12,13 @@ export async function POST(req: Request) {
       return new NextResponse("Missing fields", { status: 400 });
     }
 
-    const exist = await db.user.findUnique({
+    const existingUser = await db.user.findUnique({
       where: {
-        email
-      }
+        email,
+      },
     });
 
-    if (exist) {
+    if (existingUser) {
       return new NextResponse("Email already exists", { status: 400 });
     }
 
@@ -27,8 +28,8 @@ export async function POST(req: Request) {
       data: {
         email,
         name,
-        password: hashedPassword
-      }
+        password: hashedPassword,
+      },
     });
 
     return NextResponse.json(user);

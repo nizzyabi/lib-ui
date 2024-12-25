@@ -43,7 +43,7 @@ export default function RegisterForm() {
         throw new Error(result.error);
       }
 
-      router.push('/'); // Redirect to home or dashboard
+      router.push('/'); 
       router.refresh();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {

@@ -17,18 +17,20 @@ import { Label } from "@/components/ui/label";
 import { Icons } from "@/components/ui/icons/icons";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export function Auth() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
+
   const handleGitHubSignIn = () => {
-    signIn('github', { callbackUrl: '/' })
-  }
+    signIn("github", { callbackUrl: "/" });
+  };
 
   const handleGoogleSignIn = () => {
-    signIn('google', { callbackUrl: '/' })
-  }
+    signIn("google", { callbackUrl: "/" });
+  };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -66,9 +68,11 @@ export function Auth() {
       if (formRef.current) {
         formRef.current.reset();
       }
+      toast.success("Successfully created account!");
       router.refresh();
     } catch (error: any) {
       setError(error.message);
+      toast.error(error.message);
     }
   };
   return (
@@ -80,7 +84,7 @@ export function Auth() {
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="flex gap-4">
-            <div className="grid gap-2">
+            <div className="grid gap-2 w-full">
               <Label htmlFor="name">Name</Label>
               <Input
                 id="name"
@@ -90,7 +94,7 @@ export function Auth() {
               />
             </div>
 
-            <div className="grid gap-2">
+            <div className="grid gap-2 w-full">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"

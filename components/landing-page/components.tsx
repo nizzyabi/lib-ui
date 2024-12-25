@@ -4,6 +4,7 @@ import { Auth } from "@/components/ui/examples/auth-example";
 import Image from "next/image";
 import { Chart } from "@/components/ui/examples/chart-example";
 import { ProductPayment } from "../ui/examples/product-example";
+import { Payment } from "../ui/examples/payment-example";
 
 export default function Components() {
   return (
@@ -31,39 +32,9 @@ export default function Components() {
         </p>
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 px-12 gap-12 max-w-7xl mx-auto">
-        <div className="flex flex-col items-center">
-          <div className="relative w-24 h-12 mb-4">
-            <Image
-              src="/logos/auth.svg"
-              alt="Auth.js"
-              fill
-              className="object-contain dark:invert"
-            />
-          </div>
-          <Auth />
-        </div>
-        <div className="flex flex-col items-center">
-          <div className="relative w-28 h-12 mb-6">
-            <Image
-              src="/logos/recharts.svg"
-              alt="Recharts"
-              fill
-              className="object-contain dark:invert"
-            />
-          </div>
-          <Chart />
-        </div>
-        <div className="flex flex-col items-center">
-          <div className="relative w-24 h-12 mb-4">
-            <Image
-              src="/logos/stripe.svg"
-              alt="Stripe"
-              fill
-              className="object-contain dark:invert"
-            />
-          </div>
-          <ProductPayment />
-        </div>
+        <Auth />
+        <Chart />
+        <Payment />
       </div>
     </div>
   );
