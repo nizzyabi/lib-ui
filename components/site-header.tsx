@@ -49,7 +49,7 @@ export async function SiteHeader() {
         <MobileNav />
         <div className="flex items-center gap-3 text-sm">
           <div className="flex items-center gap-8">
-            <Link href="/components" className="hidden md:flex">
+            <Link href="/docs" className="hidden md:flex">
               Components
             </Link>
             <Link

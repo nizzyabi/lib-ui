@@ -9,6 +9,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { CopyButton } from "../ui/copy-button";
+import { Badge } from "../ui/badge";
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
@@ -75,7 +76,7 @@ export default function Hero() {
           >
             <div className="flex w-full flex-col sm:flex-row items-center justify-center gap-2">
               <Link
-                href="/components"
+                href="/docs"
                 className={cn(
                   buttonVariants({
                     size: "lg",
@@ -86,16 +87,22 @@ export default function Hero() {
               >
                 Browse components
               </Link>
-              <Link
-                href=""
-                className={cn(buttonVariants({ variant: "outline" }), "h-11 hover:bg-transparent border-none")}
-              >
-                <CopyButton
-                  src="npx libui-next@latest"
-                  value="npx libui-next@latest"
-                />{" "}
-                npx libui-next
-              </Link>
+              <div className="flex items-center">
+                <Link
+                  href=""
+                  className={cn(
+                    buttonVariants({ variant: "outline" }),
+                    "h-11 hover:bg-transparent border-none"
+                  )}
+                >
+                  <CopyButton
+                    src="npx libui-next@latest"
+                    value="npx libui-next@latest"
+                  />{" "}
+                  npx libui-next
+                  <Badge className="text-[10px] ml-2">coming soon</Badge>
+                </Link>
+              </div>
             </div>
           </motion.div>
         </div>
