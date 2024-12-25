@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
 import ShinyButton from "@/components/ui/button-shiny";
-import { Payment } from "@/components/ui/examples/payment-example";
 import { Auth } from "@/components/ui/examples/auth-example";
 import Image from "next/image";
 import { Chart } from "@/components/ui/examples/chart-example";

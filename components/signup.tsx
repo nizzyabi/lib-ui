@@ -45,6 +45,7 @@ export default function RegisterForm() {
 
       router.push('/'); // Redirect to home or dashboard
       router.refresh();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setError(error.message);
     }
