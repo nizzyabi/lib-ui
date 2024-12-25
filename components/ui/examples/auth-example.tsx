@@ -3,7 +3,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import {
   Card,
   CardContent,
@@ -13,7 +13,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Icons } from "@/components/ui/icons/icons";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -34,7 +33,6 @@ import {
 export function Auth() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const formRef = useRef<HTMLFormElement>(null);
   const session = useSession();
 
   const formSchema = z.object({
@@ -52,6 +50,11 @@ export function Auth() {
     },
   });
 
+  const handleSignOut = async () => {
+    await signOut();
+    router.refresh();
+  };
+
   const handleGitHubSignIn = () => {
     signIn("github", { callbackUrl: "/" });
     toast.success("Successfully signed in with GitHub!");
@@ -67,6 +70,8 @@ export function Auth() {
       return;
     }
     try {
+      event?.preventDefault();
+
       await axios.post("/api/auth/signup", {
         email: values.email,
         password: values.password,
@@ -97,13 +102,18 @@ export function Auth() {
 
   return (
     <Card className="w-full shadow-md shadow-primary/20">
+      <button onClick={handleSignOut}>Sign out</button>
       <CardHeader className="space-y-1 pb-2">
         <CardTitle className="text-2xl">Create an account</CardTitle>
         <CardDescription>Enter your email to access.</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-3">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+          <form 
+            onSubmit={form.handleSubmit(onSubmit)} 
+            className="w-full"
+            method="POST"
+          >
             <div className="flex gap-4 mb-4">
               <FormField
                 control={form.control}
