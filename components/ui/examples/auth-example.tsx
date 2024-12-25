@@ -3,7 +3,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import {
   Card,
   CardContent,
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/ui/icons/icons";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -49,11 +49,6 @@ export function Auth() {
       password: "",
     },
   });
-
-  const handleSignOut = async () => {
-    await signOut();
-    router.refresh();
-  };
 
   const handleGitHubSignIn = () => {
     signIn("github", { callbackUrl: "/" });
@@ -102,7 +97,6 @@ export function Auth() {
 
   return (
     <Card className="w-full shadow-md shadow-primary/20">
-      <button onClick={handleSignOut}>Sign out</button>
       <CardHeader className="space-y-1 pb-2">
         <CardTitle className="text-2xl">Create an account</CardTitle>
         <CardDescription>Enter your email to access.</CardDescription>
