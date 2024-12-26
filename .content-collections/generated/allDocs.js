@@ -25,7 +25,7 @@ export default [
   },
   {
     "content": "<Callout>\n\n**We are currently only available on nextjs, stay tuned for further updates.**\n\n</Callout>\n\n<Steps>\n\n### Create project\n\nRun the `init` command to create a new Next.js project or to setup an existing one:\n\n```bash\nnpx libui-next init\n```\n\n### Start coding\n\nYou can now start adding full stack components to your project!\n\n```bash\nnpx libui-next add authjs\n```\n\nThis will add all the configuration of `Auth.js` to your project.\n\n```tsx {1,6} showLineNumbers\nimport { SignUpForm } from '@/components/auth/sign-up-form'\n\nexport default function SignUp() {\n  return (\n    <div>\n      <SignUpForm />\n    </div>\n  )\n}\n```\n\n</Steps>",
-    "title": "Installation",
+    "title": "Installation (example)",
     "description": "Install and configure Next.js.",
     "published": true,
     "featured": false,
@@ -38,7 +38,7 @@ export default [
       "extension": "mdx",
       "path": "docs/installation"
     },
-    "image": "http://localhost:3000/og?title=Installation",
+    "image": "http://localhost:3000/og?title=Installation%20(example)",
     "slug": "/docs/installation",
     "slugAsParams": "installation",
     "body": {
