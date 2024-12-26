@@ -1,0 +1,44 @@
+---
+title: Installation
+description: Install and configure Next.js.
+---
+
+<Callout>
+
+**We are currently only available on nextjs, stay tuned for further updates.**
+
+</Callout>
+
+<Steps>
+
+### Create project
+
+Run the `init` command to create a new Next.js project or to setup an existing one:
+
+```bash
+npx libui-next init
+```
+
+### Start coding
+
+You can now start adding full stack components to your project!
+
+```bash
+npx libui-next add authjs
+```
+
+This will add all the configuration of `Auth.js` to your project.
+
+```tsx {1,6} showLineNumbers
+import { SignUpForm } from '@/components/auth/sign-up-form'
+
+export default function SignUp() {
+  return (
+    <div>
+      <SignUpForm />
+    </div>
+  )
+}
+```
+
+</Steps>
