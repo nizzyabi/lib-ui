@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
@@ -50,11 +49,6 @@ export function Auth() {
     },
   });
 
-  const handleSignOut = async () => {
-    await signOut();
-    router.refresh();
-  };
-
   const handleGitHubSignIn = () => {
     signIn("github", { callbackUrl: "/" });
     toast.success("Successfully signed in with GitHub!");
@@ -102,15 +96,14 @@ export function Auth() {
 
   return (
     <Card className="w-full shadow-md shadow-primary/20">
-      
       <CardHeader className="space-y-1 pb-2">
         <CardTitle className="text-2xl">Create an account</CardTitle>
         <CardDescription>Enter your email to access.</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-3">
         <Form {...form}>
-          <form 
-            onSubmit={form.handleSubmit(onSubmit)} 
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
             className="w-full"
             method="POST"
           >

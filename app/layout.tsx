@@ -3,8 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme/theme-provider";
 import { SiteHeader } from "@/components/site-header";
-import Providers from "./providers";
 import { Toaster } from "@/components/ui/toast";
+import { SessionProvider } from "next-auth/react";
+import { auth } from '@/auth'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,17 +22,19 @@ export const metadata: Metadata = {
   description: "A full-stack library of components for your next project",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+  console.log(session);
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>
+        <SessionProvider session={session}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -40,9 +43,9 @@ export default function RootLayout({
           >
             <SiteHeader />
             {children}
-            <Toaster position="bottom-right"/>
+            <Toaster position="bottom-right" />
           </ThemeProvider>
-        </Providers>
+        </SessionProvider>
       </body>
     </html>
   );
