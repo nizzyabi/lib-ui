@@ -5,90 +5,66 @@ import { handleError } from './handle-error';
 import { logger } from './logger';
 import { spinner } from './spinner';
 
-interface LibUIConfig {
-  aliases: Record<string, string>;
+interface Metadata {
+  files: string[];
+  dependencies: Record<string, string>;
+  devDependencies: Record<string, string>;
 }
 
-export async function addComponent() {
-  const spin = spinner('Adding auth component...');
+export async function addComponent(componentName: string) {
+  const spin = spinner(`Adding ${componentName} component...`);
   try {
     spin.start();
     
-    const configPath = path.join(process.cwd(), 'libuiconfig.json');
-    const configData = await fs.readFile(configPath, 'utf-8');
-    const libConfig: LibUIConfig = JSON.parse(configData);
+    const remoteRepoBaseURL = 'https://raw.githubusercontent.com/nizzyabi/lib-ui/main';
+    const basePath = `core/${componentName}`;
+    const metadata: Metadata = await fs.readFile(`${basePath}/metadata.json`, 'utf-8').then(JSON.parse);
 
-    const aliases = libConfig.aliases;
-
-    const remoteRepoBaseURL = 'https://raw.githubusercontent.com/nizzyabi/lib-ui/main/';
-
-    // Define component files with their relative paths
-    const componentFiles = [
-        'actions/admin.ts',
-        'actions/login.ts',
-        'actions/logout.ts',
-        'actions/new-password.ts',
-        'actions/new-verification.ts',
-        'actions/register.ts',
-        'actions/reset.ts',
-        'actions/settings.ts',
-        'app/api/admin/route.ts',
-        'app/api/auth/[...nextauth]/route.ts',
-        'auth.config.ts',
-        'auth.ts',
-        'components/auth/auth.tsx',
-        'components/auth/logout-button.tsx',
-        'components/auth/user-button.tsx',
-        'components/ui/avatar.tsx',
-        'components/ui/examples/auth-example.tsx',
-        'data/account.ts',
-        'data/password-reset-token.ts',
-        'data/two-factor-confirmation.ts',
-        'data/two-factor-token.ts',
-        'data/user.ts',
-        'data/verification-token.ts',
-        'hooks/use-current-role.ts',
-        'hooks/use-current-user.ts',
-        'lib/auth.ts',
-        'lib/mail.ts',
-        'lib/token.ts',
-        'lib/utils.ts',
-        'next-auth.d.ts',
-        'prisma/schema.prisma',
-        'routes.ts',
-        'schemas/index.ts',
-    ];
-
-    for (const file of componentFiles) {
-      const remoteFileURL = `${remoteRepoBaseURL}${file}`;
+    // First, validate that none of the target directories exist
+    for (const file of metadata.files) {
       const localFilePath = path.join(process.cwd(), file);
-
-      console.log(`Downloading from: ${remoteFileURL}`);
-      console.log(`Saving to: ${localFilePath}`);
-
-      // Ensure the local directory exists
       const directory = path.dirname(localFilePath);
-      await fs.mkdir(directory, { recursive: true });
 
-      // Download the file from the remote repository
-      let response;
-      try {
-        response = await axios.get(remoteFileURL, { responseType: 'text' });
-
-        if (response.data) {
-          await fs.writeFile(localFilePath, response.data, 'utf-8');
-          logger.log(`Added ${file} to ${localFilePath}`);
-        } else {
-          throw new Error('Failed to download file');
-        }
-      } catch {
-        throw new Error(`Failed to download ${file} from ${remoteFileURL}`);
+      if (await fs.access(directory).then(() => true).catch(() => false)) {
+        throw new Error(`Directory ${directory} already exists`);
       }
     }
 
-    spin.succeed('Auth component added successfully');
+    // Download all files first
+    const downloadedFiles = await Promise.all(
+      metadata.files.map(async (file) => {
+        const remoteFileURL = `${remoteRepoBaseURL}/${file}`;
+        logger.log(`Downloading file from ${remoteFileURL}`);
+        
+        try {
+          const response = await axios.get(remoteFileURL, { responseType: 'text' });
+          if (!response.data) {
+            throw new Error('Failed to download file');
+          }
+          return { file, content: response.data };
+        } catch {
+          throw new Error(`Failed to download ${file} from ${remoteFileURL}`);
+        }
+      })
+    );
+
+    // Create directories and write files
+    for (const { file, content } of downloadedFiles) {
+      const localFilePath = path.join(process.cwd(), file);
+      const directory = path.dirname(localFilePath);
+
+      logger.log(`Creating directory ${directory}`);
+      await fs.mkdir(directory, { recursive: true });
+
+      await fs.writeFile(localFilePath, content, 'utf-8');
+      logger.log(`Added ${file} to ${localFilePath}`);
+    }
+
+    // TODO Install dependencies
+  
+    spin.succeed(`${componentName} component added successfully`);
   } catch (error) {
-    spin.fail('Failed to add auth component');
+    spin.fail(`Failed to add ${componentName} component`);
     handleError(error);
   }
 } 
