@@ -1,34 +1,23 @@
 import { Command } from 'commander';
-import { runInit } from '../utils/init-setup';
-import { logger } from '../utils/logger';
-import { handleError } from '../utils/handle-error';
-import path from 'path';
-import { promises as fs } from 'fs';
+import { runInit } from '../utils/init-utils';
+import { logger } from '../utils/visuals';
+import { handleError } from '../utils/errors';
+import { exists } from '../utils/files';
 
 export const initCommand = new Command('init')
-  .description('Initialize a new Next.js project with TypeScript and Tailwind CSS')
+  .description('Setup libui in your project')
   .action(async () => {
     try {
-      const projectDir = process.cwd();
-      const configPath = path.join(projectDir, 'components.json');
-
-      if (await exists(configPath)) {
-        logger.error('components.json already exists in this directory. Initialization aborted.');
+      // Initial validation
+      if (await exists('libui.config.json')) {
+        logger.error('libui.config.json already exists in this directory. Initialization aborted.');
         process.exit(1);
       }
 
-      await runInit(projectDir);
+      // Run core command logic
+      await runInit();
 
     } catch (error) {
       handleError(error);
     }
   });
-
-async function exists(path: string): Promise<boolean> {
-  try {
-    await fs.access(path);
-    return true;
-  } catch {
-    return false;
-  }
-}

@@ -2,22 +2,36 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import { logger } from './logger';
-import { highlighter } from './highlighter';
-import { spinner } from './spinner';
+import { logger, spinner } from './visuals';
 
 const execPromise = promisify(exec);
 
-export async function runInit(projectDir: string) {
+const helloApiRouteContent = `import { NextResponse } from 'next/server'
+
+export async function GET() {
+  return NextResponse.json({ message: 'Hello from the libui API!' })
+}
+`;
+
+const envFileContent = `# This file will contain all the required environment variables for the application
+# Make sure to update these values in your .env file
+
+DATABASE_URL="postgresql://user:password@localhost:5432/dbname?schema=public"
+
+API_BASE_URL="http://localhost:3000/api"
+`;
+
+export async function runInit() {
   // Check if directory is empty
+  const projectDir = process.cwd();
   const dirContents = await fs.readdir(projectDir);
   if (dirContents.length > 0) {
     logger.error('Directory is not empty. Please run this command in an empty directory.');
     process.exit(1);
   }
 
-  // Initialize Next.js project with TypeScript and Tailwind
-  const nextInitSpinner = spinner('Initializing Next.js project with TypeScript and Tailwind...').start();
+  // 1. Create Next.js project
+  const nextInitSpinner = spinner('Creating Next.js project...').start();
   try {
     await execPromise('npx create-next-app@latest . --typescript --use-npm --no-eslint --no-src-dir --no-experimental-app --yes', 
       { 
@@ -25,16 +39,13 @@ export async function runInit(projectDir: string) {
         env: { ...process.env, FORCE_COLOR: '1' },
       }
     );
-    nextInitSpinner.success('Next.js project initialized with TypeScript and Tailwind.');
+    nextInitSpinner.success('Next.js project created.');
   } catch (error) {
-    nextInitSpinner.error('Failed to initialize Next.js project.');
-    if (error instanceof Error) {
-      logger.error(`Error details: ${error.message}`);
-    }
+    nextInitSpinner.error('Failed to create Next.js project.');
     throw error;
   }
 
-  // Install Prisma
+  // 2. Install Prisma
   const prismaSpinner = spinner('Setting up Prisma...').start();
   try {
     await execPromise('npm install -D prisma @prisma/client', { cwd: projectDir });
@@ -45,46 +56,28 @@ export async function runInit(projectDir: string) {
     throw error;
   }
 
-  // Create API directory structure
+  // 3. Create API directory structure
   const apiSpinner = spinner('Creating API structure...').start();
   try {
-    // Create all necessary directories
-    await fs.mkdir(path.join(projectDir, 'app', 'api', 'hello'), { recursive: true });
-    
-    // Create example API route
-    const exampleApiRoute = `import { NextResponse } from 'next/server'
- 
-export async function GET() {
-  return NextResponse.json({ message: 'Hello from the libui API!' })
-}
-`;
-    await fs.writeFile(path.join(projectDir, 'app', 'api', 'hello', 'route.ts'), exampleApiRoute, 'utf8');
+    await fs.mkdir(path.join(projectDir, 'app/api/hello'), { recursive: true });
+    await fs.writeFile(path.join(projectDir, 'app/api/hello/route.ts'), helloApiRouteContent, 'utf8');
     apiSpinner.success('API structure created.');
   } catch (error) {
     apiSpinner.error('Failed to create API structure.');
     throw error;
   }
 
-  // Create both .env and .env.sample with the same content
+  // 4. Create .env file
   const envSpinner = spinner('Creating environment file...').start();
   try {
-    const envContent = `# This file will contain all the required environment variables for the application
-# Make sure to update these values in your .env file
-
-# Database Configuration
-DATABASE_URL="postgresql://user:password@localhost:5432/dbname?schema=public"
-
-# API Configuration
-API_BASE_URL="http://localhost:3000/api"
-`;
-    await fs.writeFile(path.join(projectDir, '.env'), envContent, 'utf8');
+    await fs.writeFile(path.join(projectDir, '.env'), envFileContent, 'utf8');
     envSpinner.success('Environment file created.');
   } catch (error) {
     envSpinner.error('Failed to create environment file.');
     throw error;
   }
 
-  // Create libui.config.json
+  // 5. Create libui.config.json
   const config = {
     addedComponents: [],
   };
@@ -99,7 +92,7 @@ API_BASE_URL="http://localhost:3000/api"
     throw error;
   }
 
-  // Install additional dependencies
+  // 6. Install additional dependencies
   const dependenciesSpinner = spinner('Installing additional dependencies...').start();
   try {
     await execPromise('npm install react react-dom next @prisma/client', { cwd: projectDir });
@@ -109,8 +102,8 @@ API_BASE_URL="http://localhost:3000/api"
     throw error;
   }
 
-  logger.log(highlighter.success('Initialization complete! You can now:'));
-  logger.log(highlighter.success('1. Update your .env file with your database credentials'));
-  logger.log(highlighter.success('2. Run `npx prisma generate` to generate the Prisma Client'));
-  logger.log(highlighter.success('3. Start your development server with `npm run dev`'));
+  logger.success('Initialization complete! You can now:');
+  logger.success('1. Update your .env file with your database credentials');
+  logger.success('2. Run `npx prisma generate` to generate the Prisma Client');
+  logger.success('3. Start your development server with `npm run dev`');
 }
