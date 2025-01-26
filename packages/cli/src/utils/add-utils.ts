@@ -6,28 +6,25 @@ import { Metadata } from '../types/metadata';
 import { exists } from './files';
 
 export async function addComponent(componentName: string) {
-  const spin = spinner(`Adding ${componentName} component...`);
-  const projectDir = process.cwd();
+  const spin = spinner(`Adding ${componentName} component...\n`);
   try {
     // Validate libui.config.json exists and the component is not already added
-    const configPath = path.join(projectDir, 'libui.config.json');
-    if (!await exists(configPath)) {
+    if (!await exists('libui.config.json')) {
       throw new Error('libui.config.json not found in the current directory');
     }
-    const config = JSON.parse(await fs.readFile(configPath, 'utf8'));
+    const config = JSON.parse(await fs.readFile('libui.config.json', 'utf8'));
     if (componentName in config.addedComponents) {
       throw new Error(`${componentName} component already added.`);
     }
 
     // Validate package.json exists
-    const packageJsonPath = path.join(projectDir, 'package.json');
-    if (!await exists(packageJsonPath)) {
+    if (!await exists('package.json')) {
       throw new Error('package.json not found in the current directory');
     }
 
     spin.start();
     
-    const remoteRepoBaseURL = 'https://raw.githubusercontent.com/nizzyabi/lib-ui/main';
+    const remoteRepoBaseURL = 'https://raw.githubusercontent.com/nizzyabi/lib-ui/cli';
     const basePath = `core/${componentName}`;
 
     logger.log(`Fetching component metadata...`);
@@ -40,9 +37,8 @@ export async function addComponent(componentName: string) {
     // Validate that none of the target directories exist
     logger.log('Checking if files already exist...');
     for (const file of metadata.files) {
-      const localFilePath = path.join(projectDir, file);
-      if (await exists(localFilePath)) {
-        throw new Error(`File ${localFilePath} already exists`);
+      if (await exists(file)) {
+        throw new Error(`File ${file} already exists`);
       }
     }
 
@@ -62,16 +58,15 @@ export async function addComponent(componentName: string) {
 
     // Create directories and write files
     for (const { file, content } of downloadedFiles) {
-      const localFilePath = path.join(projectDir, file);
-      const directory = path.dirname(localFilePath);
+      const directory = path.dirname(file);
 
       await fs.mkdir(directory, { recursive: true });
-      await fs.writeFile(localFilePath, content, 'utf-8');
-      logger.log(`Added ${file} to ${localFilePath}`);
+      await fs.writeFile(file, content, 'utf-8');
+      logger.log(`Added ${file} to ${file}`);
     }
 
     // Add dependencies to package.json
-    const packageJson = await fs.readFile(packageJsonPath, 'utf-8');
+    const packageJson = await fs.readFile('package.json', 'utf-8');
     const packageJsonObject = JSON.parse(packageJson);
 
     // Handle dependencies
@@ -103,24 +98,23 @@ export async function addComponent(componentName: string) {
     }
 
     // Add env variables
-    const envFilePath = path.join(projectDir, '.env');
-    const envFile = await fs.readFile(envFilePath, 'utf-8');
+    const envFile = await fs.readFile('.env', 'utf-8');
     for (const envVar of metadata.envVariables) {
       const regex = new RegExp(`^${envVar}\\s*=\\s*`, 'm');
       if (regex.test(envFile)) {
         logger.warn(`Env variable ${envVar} already exists in .env file`);
       } else {
-        await fs.writeFile(envFilePath, `\n${envVar}=...\n`, { flag: 'a' });
+        await fs.writeFile('.env', `\n${envVar}=...\n`, { flag: 'a' });
       }
     }
 
-    await fs.writeFile(packageJsonPath, JSON.stringify(packageJsonObject, null, 2), 'utf-8');
+    await fs.writeFile('package.json', JSON.stringify(packageJsonObject, null, 2), 'utf-8');
 
     // Add the component to the config
     config.addedComponents.push(componentName);
-    await fs.writeFile(configPath, JSON.stringify(config, null, 2), 'utf-8');
+    await fs.writeFile('libui.config.json', JSON.stringify(config, null, 2), 'utf-8');
 
-    spin.succeed('Files and dependencies added successfully');
+    spin.succeed('Project updated successfully');
     logger.success(`The ${componentName} component has been added successfully`);
     logger.success('1. Update the .env file with the correct values');
     logger.success('2. Run `npm install` to install the new dependencies');

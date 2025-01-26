@@ -1,5 +1,4 @@
 import { promises as fs } from 'fs';
-import path from 'path';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { logger, spinner } from './visuals';
@@ -14,11 +13,15 @@ export async function GET() {
 `;
 
 const envFileContent = `# This file will contain all the required environment variables for the application
-# Make sure to update these values in your .env file
+# Make sure to update them every time you add a new component
+`;
 
-DATABASE_URL="postgresql://user:password@localhost:5432/dbname?schema=public"
+const utilsContent = `import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
 
-API_BASE_URL="http://localhost:3000/api"
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
 `;
 
 export async function runInit() {
@@ -46,21 +49,20 @@ export async function runInit() {
   }
 
   // 2. Install Prisma
-  const prismaSpinner = spinner('Setting up Prisma...').start();
+  const prismaSpinner = spinner('Installing Prisma...').start();
   try {
     await execPromise('npm install -D prisma @prisma/client', { cwd: projectDir });
-    await fs.mkdir(path.join(projectDir, 'prisma'), { recursive: true });
-    prismaSpinner.success('Prisma setup completed.');
+    prismaSpinner.success('Prisma installed.');
   } catch (error) {
-    prismaSpinner.error('Failed to setup Prisma.');
+    prismaSpinner.error('Failed to install Prisma.');
     throw error;
   }
 
   // 3. Create API directory structure
   const apiSpinner = spinner('Creating API structure...').start();
   try {
-    await fs.mkdir(path.join(projectDir, 'app/api/hello'), { recursive: true });
-    await fs.writeFile(path.join(projectDir, 'app/api/hello/route.ts'), helloApiRouteContent, 'utf8');
+    await fs.mkdir('app/api/hello', { recursive: true });
+    await fs.writeFile('app/api/hello/route.ts', helloApiRouteContent, 'utf8');
     apiSpinner.success('API structure created.');
   } catch (error) {
     apiSpinner.error('Failed to create API structure.');
@@ -70,7 +72,7 @@ export async function runInit() {
   // 4. Create .env file
   const envSpinner = spinner('Creating environment file...').start();
   try {
-    await fs.writeFile(path.join(projectDir, '.env'), envFileContent, 'utf8');
+    await fs.writeFile('.env', envFileContent, 'utf8');
     envSpinner.success('Environment file created.');
   } catch (error) {
     envSpinner.error('Failed to create environment file.');
@@ -82,10 +84,9 @@ export async function runInit() {
     addedComponents: [],
   };
 
-  const configPath = path.join(projectDir, 'libui.config.json');
   try {
     const configSpinner = spinner('Writing libui.config.json...').start();
-    await fs.writeFile(configPath, JSON.stringify(config, null, 2), 'utf8');
+    await fs.writeFile('libui.config.json', JSON.stringify(config, null, 2), 'utf8');
     configSpinner.success('libui.config.json written successfully.');
   } catch (error) {
     logger.error('Failed to write libui.config.json.');
@@ -95,15 +96,25 @@ export async function runInit() {
   // 6. Install additional dependencies
   const dependenciesSpinner = spinner('Installing additional dependencies...').start();
   try {
-    await execPromise('npm install react react-dom next @prisma/client', { cwd: projectDir });
+    await execPromise('npm install react react-dom next @prisma/client clsx tailwind-merge', { cwd: projectDir });
     dependenciesSpinner.success('Additional dependencies installed.');
   } catch (error) {
     dependenciesSpinner.error('Failed to install additional dependencies.');
     throw error;
   }
 
+  // 7. Create utils directory and cn helper
+  const utilsSpinner = spinner('Creating utils directory and helpers...').start();
+  try {
+    await fs.mkdir('lib', { recursive: true });
+    await fs.writeFile('lib/utils.ts', utilsContent, 'utf8');
+    utilsSpinner.success('Utils directory and helpers created.');
+  } catch (error) {
+    utilsSpinner.error('Failed to create utils directory and helpers.');
+    throw error;
+  }
+
   logger.success('Initialization complete! You can now:');
   logger.success('1. Update your .env file with your database credentials');
-  logger.success('2. Run `npx prisma generate` to generate the Prisma Client');
-  logger.success('3. Start your development server with `npm run dev`');
+  logger.success('2. Start your development server with `npm run dev`');
 }
