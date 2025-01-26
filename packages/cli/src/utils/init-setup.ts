@@ -39,19 +39,6 @@ export async function runInit(projectDir: string) {
   try {
     await execPromise('npm install -D prisma @prisma/client', { cwd: projectDir });
     await fs.mkdir(path.join(projectDir, 'prisma'), { recursive: true });
-    
-    const prismaSchema = `generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-// Add your models here
-`;
-    await fs.writeFile(path.join(projectDir, 'prisma', 'schema.prisma'), prismaSchema, 'utf8');
     prismaSpinner.success('Prisma setup completed.');
   } catch (error) {
     prismaSpinner.error('Failed to setup Prisma.');
@@ -97,47 +84,18 @@ API_BASE_URL="http://localhost:3000/api"
     throw error;
   }
 
-  // Create libuiconfig.json (expanded version)
+  // Create libui.config.json
   const config = {
-    tsx: true,
-    tailwind: {
-      config: 'tailwind.config.js',
-      css: 'styles/globals.css',
-      baseColor: 'blue',
-      cssVariables: true,
-      prefix: '',
-    },
-    rsc: false,
-    database: {
-      provider: 'prisma',
-      schema: 'prisma/schema.prisma',
-      url: 'DATABASE_URL',
-    },
-    api: {
-      baseUrl: '/api',
-      version: 'v1',
-      cors: {
-        enabled: true,
-        origins: ['http://localhost:3000'],
-      },
-    },
-    aliases: {
-      utils: 'utils',
-      components: 'components',
-      lib: 'lib',
-      hooks: 'hooks',
-      api: 'app/api',
-      prisma: 'prisma',
-    },
+    addedComponents: [],
   };
 
-  const configPath = path.join(projectDir, 'libuiconfig.json');
+  const configPath = path.join(projectDir, 'libui.config.json');
   try {
-    const configSpinner = spinner('Writing libuiconfig.json...').start();
+    const configSpinner = spinner('Writing libui.config.json...').start();
     await fs.writeFile(configPath, JSON.stringify(config, null, 2), 'utf8');
-    configSpinner.success('libuiconfig.json written successfully.');
+    configSpinner.success('libui.config.json written successfully.');
   } catch (error) {
-    logger.error('Failed to write libuiconfig.json.');
+    logger.error('Failed to write libui.config.json.');
     throw error;
   }
 
