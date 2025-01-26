@@ -7,5 +7,4 @@ export const logger = {
   error: (message: string) => {
     console.error(chalk.red(message));
   },
-  // Add other methods if necessary
 }; 

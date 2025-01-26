@@ -20,7 +20,7 @@ export async function addComponent(componentName: string) {
     const basePath = `core/${componentName}`;
     const metadata: Metadata = await fs.readFile(`${basePath}/metadata.json`, 'utf-8').then(JSON.parse);
 
-    // First, validate that none of the target directories exist
+    // Validate that none of the target directories exist
     for (const file of metadata.files) {
       const localFilePath = path.join(process.cwd(), file);
       const directory = path.dirname(localFilePath);
@@ -39,11 +39,11 @@ export async function addComponent(componentName: string) {
         try {
           const response = await axios.get(remoteFileURL, { responseType: 'text' });
           if (!response.data) {
-            throw new Error('Failed to download file');
+            throw new Error(`No content retrieved from ${remoteFileURL}`);
           }
           return { file, content: response.data };
-        } catch {
-          throw new Error(`Failed to download ${file} from ${remoteFileURL}`);
+        } catch (error) {
+          throw new Error(`Failed to download remote file from ${remoteFileURL}: ${error}`);
         }
       })
     );
@@ -60,11 +60,11 @@ export async function addComponent(componentName: string) {
       logger.log(`Added ${file} to ${localFilePath}`);
     }
 
-    // TODO Install dependencies
+    // TODO Add dependencies to package.json
   
     spin.succeed(`${componentName} component added successfully`);
   } catch (error) {
     spin.fail(`Failed to add ${componentName} component`);
     handleError(error);
   }
-} 
+}

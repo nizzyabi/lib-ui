@@ -16,68 +16,21 @@ export async function runInit(projectDir: string) {
     process.exit(1);
   }
 
-  // Initialize Next.js project with TypeScript
-  const nextInitSpinner = spinner('Initializing Next.js project with TypeScript...').start();
+  // Initialize Next.js project with TypeScript and Tailwind
+  const nextInitSpinner = spinner('Initializing Next.js project with TypeScript and Tailwind...').start();
   try {
-    await execPromise('npx create-next-app@latest . --typescript --use-npm --no-eslint --no-tailwind --no-src-dir --no-experimental-app --yes', 
+    await execPromise('npx create-next-app@latest . --typescript --use-npm --no-eslint --no-src-dir --no-experimental-app --yes', 
       { 
         cwd: projectDir,
         env: { ...process.env, FORCE_COLOR: '1' },
       }
     );
-    nextInitSpinner.success('Next.js project initialized with TypeScript.');
+    nextInitSpinner.success('Next.js project initialized with TypeScript and Tailwind.');
   } catch (error) {
     nextInitSpinner.error('Failed to initialize Next.js project.');
     if (error instanceof Error) {
       logger.error(`Error details: ${error.message}`);
     }
-    throw error;
-  }
-
-  // Install Tailwind CSS
-  const tailwindSpinner = spinner('Installing Tailwind CSS...').start();
-  try {
-    await execPromise('npm install -D tailwindcss postcss autoprefixer', { cwd: projectDir });
-    await execPromise('npx tailwindcss init -p', { cwd: projectDir });
-    tailwindSpinner.success('Tailwind CSS installed.');
-
-    // Configure Tailwind CSS
-    const tailwindConfigPath = path.join(projectDir, 'tailwind.config.js');
-    const tailwindConfig = `/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};
-`;
-    await fs.writeFile(tailwindConfigPath, tailwindConfig, 'utf8');
-
-    // Check for app directory structure
-    const appDirExists = await exists(path.join(projectDir, 'app'));
-    const globalCssPath = appDirExists 
-      ? path.join(projectDir, 'app', 'globals.css')
-      : path.join(projectDir, 'styles', 'globals.css');
-
-    // Create directory if it doesn't exist
-    await fs.mkdir(path.dirname(globalCssPath), { recursive: true });
-
-    // Add Tailwind directives to globals.css
-    const globalsCssContent = `@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Add your custom styles here */
-`;
-    await fs.writeFile(globalCssPath, globalsCssContent, 'utf8');
-    logger.log(highlighter.success('Tailwind CSS configured successfully.'));
-  } catch (error) {
-    tailwindSpinner.error('Failed to install Tailwind CSS.');
     throw error;
   }
 
@@ -115,7 +68,7 @@ datasource db {
     const exampleApiRoute = `import { NextResponse } from 'next/server'
  
 export async function GET() {
-  return NextResponse.json({ message: 'Hello from libui API!' })
+  return NextResponse.json({ message: 'Hello from the libui API!' })
 }
 `;
     await fs.writeFile(path.join(projectDir, 'app', 'api', 'hello', 'route.ts'), exampleApiRoute, 'utf8');
@@ -199,16 +152,7 @@ API_BASE_URL="http://localhost:3000/api"
   }
 
   logger.log(highlighter.success('Initialization complete! You can now:'));
-  logger.log('1. Update your .env file with your database credentials');
-  logger.log('2. Run `npx prisma generate` to generate the Prisma Client');
-  logger.log('3. Start your development server with `npm run dev`');
+  logger.log(highlighter.success('1. Update your .env file with your database credentials'));
+  logger.log(highlighter.success('2. Run `npx prisma generate` to generate the Prisma Client'));
+  logger.log(highlighter.success('3. Start your development server with `npm run dev`'));
 }
-
-async function exists(path: string): Promise<boolean> {
-  try {
-    await fs.access(path);
-    return true;
-  } catch {
-    return false;
-  }
-} 

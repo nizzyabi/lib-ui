@@ -19,7 +19,6 @@ export const initCommand = new Command('init')
 
       await runInit(projectDir);
 
-      logger.log('Project initialization completed successfully.');
     } catch (error) {
       handleError(error);
     }

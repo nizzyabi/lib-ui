@@ -4,7 +4,6 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
     "build:cli": "tsc && chmod +x dist/index.js",
     "start": "ts-node src/index.ts",
     "prepare": "npm run build"
