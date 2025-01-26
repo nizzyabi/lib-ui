@@ -14,6 +14,9 @@ export async function GET() {
 
 const envFileContent = `# This file will contain all the required environment variables for the application
 # Make sure to update them every time you add a new component
+
+# This is a sample database url, you can change it to your own
+DATABASE_URL="postgresql://user:password@localhost:5432/dbname?schema=public"
 `;
 
 const utilsContent = `import { type ClassValue, clsx } from "clsx"
